@@ -1,0 +1,171 @@
+*************************************************************** MONGODB **********************************************************************
+
+
+-> monogodb is a general purpose document database.
+-> documents offer a flexible and developer-friendly way to work with data.
+
+-> document is a basic unit of data in mongodb. a collection is a grouping of those document & a database is a container for those collection.
+-> mongodb atlas is a developer data platform.
+-> data is in format of JSON & stored in format of BSON (binary JSON)
+
+
+-> Every document requires an _id field, which is a primary key. if inserted document dosent't include the _id field, mongoDB automatically generates and ObjectId for _id field.
+
+-> ObjectId -- a data type used to create unique identifiers for required _id field
+
+
+CRUD (create, Read, Update, Delete) Operation in MongoDB :-
+
+	{
+		-> INSERT :-
+		{
+			1. insertOne() -> db.<collection>.insertOne()	
+
+				Ex:- db.grades.insertOne({
+					student_id : 46464,
+					scores:[
+						{
+							type:"quitz",
+							score:50
+						},
+						{
+							type:"homework",
+							score:70
+						}
+					]
+				})
+
+			2. insertMany() -> db.<collection>.insertMany([
+				<document1>,
+				<document2>,
+				<document3>
+			])
+				
+		}
+
+		-> FIND :-
+		{
+			DB.<collection>.find(<querry>,<projection>)
+
+			// projection {
+
+				1. To Include = {  db.collection.find(<querry>,{<field>:1, <field>:1})   }
+				2. To exclude = {  db.collection.find(<querry>,{<field>:0, <field>:0})   }
+			}
+
+			$eq Operator:- {
+				{field :{$eq:<value>}} || {field : <value>} // to find a equal value that we specified.
+			}
+
+			$in Operator:- {
+				//the $in operator allow us to select all documents that have a field value equal to any of the values specified in the array.
+
+				db.<collection>.find({
+					<field>:{
+						$in:[<val1>,<val2>]
+					}
+				}) 
+			}
+
+			$gt // greater than
+			$gte // greater than equal to
+			$lt // less than
+			$lte //less than equal to
+		}
+
+		-> QUERYING ON ARRAY :-
+		{
+			db.<collection>.find({
+				products:{
+					$elemMatch:{
+						$eq:"investmentStock"
+					}
+				}
+			})
+		}
+
+		-> $and || $or
+		{
+			$and :- db.<collection>.find({
+				$and:[
+					{},
+					{},
+					{}
+				]
+			})
+
+			$or :- db.<collection>.find({
+				$or:[
+					{},
+					{},
+					{}
+				]
+			})
+
+
+			db.<collection>.find({
+				$and:[
+					{$or:[{},{}]},
+					{$or:[{},{}]}
+				]
+			})
+		}
+
+
+		-> replace || update :- 
+		{
+			1. replaceOne :- db.collection.replaceOne(filter,replacemnet,options)
+
+			2. updateOne :- db.collection.updateOne(filter,update,option)
+
+			$set Operator :- //Adds new field and values to a document || replace the value of field to a specified value 
+			$push Operator :- //Appends a value to an array || if absent ,$push adds the array field with the value as its element. 
+
+			upsert :-  insert a document with provided information if matching documents don't exist. the update operation will be carried out // used in option ex:- {upsert:true}
+
+			3. UpdateMany() :- db.collection.updateMany({filter},{update},{options})
+
+		}
+
+		-> findAndModify :- 
+		{
+			db.collection.findAndModify({
+				query:{_id:ObectId(hfhhfhiia)},
+				update:{$inc : { download : 1 } },
+				new : true
+			})
+		}
+
+		-> deleteOne() :- db.collection.deleteOne(filter,options)			
+
+		-> sort()
+		-> limit()
+
+		-> countDocuments 
+		{
+			db.collection.countDocuments(<querry>,<options>)
+		}
+
+		-> aggregration pipelines 
+		{
+			db.collection.aggregate([
+				{ $stage_name: { <expression> } },
+				{ $stage_name: { <expression> } }
+			])
+
+			-> stages {
+
+				$match // Filter for document for matching criteria.
+				{
+					db.zips.aggregate([
+						{$match : {"state" : "CA"}}
+					]) 
+
+					// it excatlly work as a find comand
+				}
+
+				$group // Create a single document for each distint value.
+
+			}
+		}
+	}
